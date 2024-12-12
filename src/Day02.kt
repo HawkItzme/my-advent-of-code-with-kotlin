@@ -5,6 +5,7 @@ fun main(){
         line.split(" ").map { str -> str.toInt() }
     }
     part1(report = lines)
+    part2(lines)
 
 }
 
@@ -25,4 +26,19 @@ private fun isReportSafe(leves : List<Int>) :Boolean{
         pair.second - pair.first in -3..-1
     }
     return allAreIncre || allAreDecr
+}
+
+private fun part2(report : List<List<Int>>){
+    var result = 0
+    for (line in report){
+        var safe = false
+        for (i in 0..line.lastIndex){
+            safe = isReportSafe(line.toMutableList().apply { removeAt(i) })
+            if (safe) break
+        }
+        if (safe) result++
+    }
+
+    println(result)
+
 }
