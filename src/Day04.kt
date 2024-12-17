@@ -2,6 +2,8 @@ fun main(){
     val input = readInput("Day04")
     val grid = Grid(input.map { it.toCharArray().toList() })
     part1(grid)
+
+    part2(grid)
 }
 
 private fun part1(grid: Grid){
@@ -11,6 +13,16 @@ private fun part1(grid: Grid){
     }
     println(xmasWordCount)
 }
+
+private fun part2(grid: Grid){
+    var crossCount = 0
+    for ((centerX : Int, centerY: Int) in  grid.indices){
+        crossCount += if (grid.countXMasCrossFromPos(centerX, centerY)) 1 else 0
+    }
+    println(crossCount)
+}
+
+
 
 data class Vector1(val x:Int, val y:Int)
 
@@ -56,4 +68,71 @@ data class Grid(private val ele : List<List<Char>>){
         }
         return true
     }
+
+    fun countXMasCrossFromPos(centerX : Int, centerY: Int): Boolean{
+
+        //For Invalid Center
+        if (getAtPos(centerX, centerY) != 'A'){
+            return false
+        }
+
+        val isBottomDiagonalMAS : Boolean =
+            getAtPos(centerX - 1, centerY - 1) == 'M' && getAtPos(centerX + 1, centerY + 1) == 'S'
+        val isBottomDiagonalSAM : Boolean =
+            getAtPos(centerX - 1, centerY - 1) == 'S' && getAtPos(centerX + 1, centerY + 1) == 'M'
+        val isBottomDiagonalFine : Boolean = isBottomDiagonalMAS || isBottomDiagonalSAM
+
+
+        val isTopDiagonalMAS : Boolean =
+            getAtPos(centerX - 1, centerY + 1) == 'M' && getAtPos(centerX + 1, centerY - 1) == 'S'
+        val isTopDiagonalSAM : Boolean =
+            getAtPos(centerX - 1, centerY + 1) == 'S' && getAtPos(centerX + 1, centerY - 1) == 'M'
+        val isTopDiagonalFine : Boolean = isTopDiagonalSAM || isTopDiagonalMAS
+
+        return isBottomDiagonalFine && isTopDiagonalFine
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
