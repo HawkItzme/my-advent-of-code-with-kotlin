@@ -21,6 +21,32 @@ data class Update(val numbers: List<Int>){
     fun middleNum(): Int{
         return numbers[numbers.lastIndex / 2]
     }
+
+    fun productPartiallyBetterUpdate(rules: List<OrderingRule>) : Update{
+        for (rule in rules){
+            if (isSingleRuleValid(rule)){
+                continue
+            }
+            val newOrder = this.numbers.toMutableList()
+            val beforeIndex = newOrder.indexOf(rule.before)
+            val afterIndex = newOrder.indexOf(rule.after)
+            newOrder[beforeIndex] = rule.after
+            newOrder[afterIndex] = rule.before
+            val new = Update(newOrder)
+            check(new.isSingleRuleValid(rule))
+
+            return new
+        }
+        return this
+    }
+
+    fun productTotallyBetterUpdate(rules: List<OrderingRule>): Update{
+        var curr = this
+        do{
+            curr = curr.productPartiallyBetterUpdate(rules)
+        }while (!curr.isValid(rules))
+        return curr
+    }
 }
 
 
@@ -38,8 +64,10 @@ fun main(){
             Update(line.split(",").map { it.toInt() })
         }
     val part1Sol = measureTimedValue { part1(updates, orderingRules) }
+    val part2Sol = measureTimedValue { part2(updates, orderingRules) }
 
     println(part1Sol)
+    println(part2Sol)
 }
 
 private fun part1(
@@ -52,5 +80,18 @@ private fun part1(
         }else{
             0
         }
+    }
+}
+
+private fun part2(
+    updates: List<Update>,
+    orderingRules: List<OrderingRule>
+): Int{
+    val invalidUpdates = updates.filterNot { update: Update ->
+        update.isValid(orderingRules)
+    }
+    return invalidUpdates.sumOf {
+        it.productTotallyBetterUpdate(orderingRules)
+            .middleNum()
     }
 }
