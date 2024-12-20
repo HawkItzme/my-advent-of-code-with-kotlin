@@ -1,5 +1,4 @@
 import java.awt.geom.IllegalPathStateException
-import java.security.Guard
 
 fun main(){
     val input = readInput("Day06")
