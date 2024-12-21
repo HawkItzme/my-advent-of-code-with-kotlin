@@ -1,4 +1,9 @@
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.awt.geom.IllegalPathStateException
+import java.util.concurrent.atomic.AtomicInteger
+
 
 fun main(){
     val input = readInput("Day06")
@@ -6,6 +11,7 @@ fun main(){
         string.toList()
     }
     part1(lines)
+    part2(lines)
 }
 
 private fun part1(lines: List<List<Char>> ){
@@ -18,6 +24,33 @@ private fun part1(lines: List<List<Char>> ){
         val distinctCount = value.distinctBy { record -> record.loc }.size
         println("Total distinct success values: $distinctCount")
     })
+}
+
+private fun part2(lines: List<List<Char>>){
+    val cnt = AtomicInteger(0)
+    runBlocking(Dispatchers.Default) {
+        for (stopY in lines.indices){
+            for (stopX in lines[0].indices ){
+                launch {
+                    val res = simulatePlacedObstruction(lines, stopX, stopY)
+                    if (res.isFailure){
+                        cnt.incrementAndGet()
+                    }
+                }
+            }
+        }
+    }
+    println(cnt)
+}
+
+fun simulatePlacedObstruction(lines : List<List<Char>>, obsX:Int, obsy:Int) : Result<List<GuardWalkRecord>>{
+    val tile = lines[obsy][obsX]
+    if (tile == '^' || tile == '#'){
+        return Result.success(emptyList())
+    }
+    val workingCopy = lines.map { chars ->  chars.toMutableList() }
+    workingCopy[obsy][obsX] = '#'
+    return simulateGuardPath(workingCopy)
 }
 
 data class GuardWalkRecord(val loc : Vec2, val heading: GuardHeading){
