@@ -12,9 +12,16 @@ fun main(){
             (x,y) -> x in mapXRange && y in mapYRange
         }
     }
-
+    val antiNodeLocation2 = measureTimedValue {
+        part2(
+            typeToPosition = typeToPos
+        ){
+                (x,y) -> x in mapXRange && y in mapYRange
+        }
+    }
 
     println("${antiNodeLocation1.value.size} in ${antiNodeLocation1.duration}")
+    println("${antiNodeLocation2.value.size} in ${antiNodeLocation2.duration}")
 
 }
 
@@ -59,6 +66,34 @@ fun part1(
     }
 }
 
+fun part2(
+    typeToPosition : Map<Char, Set<VecNew>>,
+    isInBounds: (VecNew) -> Boolean
+): Set<VecNew> = buildSet {
+    for (antennaType  in typeToPosition.keys){
+        for (first: VecNew in typeToPosition[antennaType]!!){
+            for (second: VecNew in typeToPosition[antennaType]!!){
+                if (first == second) continue
+                val distanceVec : VecNew = second - first
+                val relDistVec: VecNew = distanceVec
+                var positiveNextLocation  = first
+                do {
+                    positiveNextLocation = positiveNextLocation + relDistVec
+                    if (isInBounds(positiveNextLocation)){
+                        this.add(positiveNextLocation)
+                    }
+                }while (isInBounds(positiveNextLocation))
+                var negativeNextLocation = first
+                do {
+                    negativeNextLocation = negativeNextLocation - relDistVec
+                    if (isInBounds(negativeNextLocation)){
+                        this.add(negativeNextLocation)
+                    }
+                }while (isInBounds(negativeNextLocation))
+            }
+        }
+    }
+}
 
 
 
