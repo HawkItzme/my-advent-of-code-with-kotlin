@@ -1,6 +1,3 @@
-package input
-
-import readInput
 import kotlin.math.pow
 import kotlin.time.measureTimedValue
 
