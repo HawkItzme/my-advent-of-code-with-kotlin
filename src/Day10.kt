@@ -10,6 +10,9 @@ fun main() {
         countDistinctPathsToSummitsForTrailHead(traihead, map)
     }.also(:: println)
 
+    check(part1Result == 535)
+    check(part2Result == 1186)
+
 }
 
 data class VecNew2(
