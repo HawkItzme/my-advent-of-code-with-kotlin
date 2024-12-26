@@ -6,6 +6,10 @@ fun main() {
         countReachableSummitsForTrailHead(traihead, map)
     }.also(:: println)
 
+    val part2Result = potentialTrailHeads.sumOf { (traihead, _) ->
+        countDistinctPathsToSummitsForTrailHead(traihead, map)
+    }.also(:: println)
+
 }
 
 data class VecNew2(
@@ -51,4 +55,29 @@ fun walkPathsToSummits(path: List<VecNew2>, map: Map<VecNew2, Int>): List<Summit
         walkPathsToSummits(path + it, map)
     }
     return reachableSummits
+}
+
+fun countDistinctPathsToSummitsForTrailHead(trailHeads: VecNew2, map: Map<VecNew2, Int>): Int{
+    require(map[trailHeads] == 0)
+    val paths: List<Path> = tracePathsToSummits(listOf(trailHeads), map)
+    check(paths.all { path -> map.getCoordinate(path.steps.last()) == 9 })
+    return paths.toSet().size
+}
+
+@JvmInline
+value class Path(val steps: List<VecNew2>)
+
+fun tracePathsToSummits(path: List<VecNew2>, map: Map<VecNew2, Int>): List<Path> {
+    val curLoc = path.last()
+    val curLevel = map.getCoordinate(curLoc)
+    if (curLevel == 9) return  listOf(Path(path))
+    val nextLevel = curLevel + 1
+    val walkablePaths = with(curLoc){
+        listOf(up(), down(), left(), right())
+    }.filter{
+        map.getCoordinate(it) == nextLevel
+    }.flatMap{
+        tracePathsToSummits(path + it, map)
+    }
+    return walkablePaths
 }
