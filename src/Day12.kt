@@ -16,6 +16,18 @@
 
     }
 
+    fun part_2(farmLines: List<String>): Int{
+        val allCoordinates = getAllCoordinates(farmLines)
+        val regions = findFenceablePlantRegion(allCoordinates, farmLines)
+        val areas = regions.map{ it.area}
+        val sides = regions.map { it.sides }
+        val prices = areas.zip(sides){area , sides ->
+            area * sides
+        }
+        return prices.sum()
+
+    }
+
     data class VecNew3(val x:Int, val y: Int){
         fun up() = VecNew3(x, y - 1)
         fun down() = VecNew3(x, y + 1)
