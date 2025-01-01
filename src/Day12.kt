@@ -1,7 +1,9 @@
+import kotlin.math.abs
 
-    fun main() {
+fun main() {
         val input = readInput("Day12")
         println("PART 1: ${part_1(input)}")
+        println("PART 2: ${part_2(input)}")
     }
 
     fun part_1(farmLines: List<String>): Int{
@@ -33,6 +35,8 @@
         fun down() = VecNew3(x, y + 1)
         fun left() = VecNew3(x - 1, y)
         fun right() = VecNew3(x + 1, y)
+        operator fun plus(other : VecNew3) = VecNew3(x + other.x, y + other.y)
+        fun dist(other : VecNew3): Int = abs(x - other.x) + abs(y - other.y)
     }
 
     @JvmInline
@@ -55,7 +59,83 @@
                 return plotAdjacentLocations.size
             }
         val sides : Int
-            get() = coordinates.size
+            get() {
+                val xRange = (coordinates.minOf { vecNew3 -> vecNew3.x }) - 1..(coordinates.maxOf { it.x }) + 1
+                val yRange = (coordinates.minOf { vecNew3 -> vecNew3.y }) - 1..(coordinates.maxOf { it.y }) + 1
+
+                val horizontalTopEdges = buildList{
+                    for(y in yRange){
+                        add(buildList {
+                            for (x in xRange){
+                                val loc = VecNew3(x,y)
+                                if (loc !in coordinates && loc.down() in coordinates){
+                                    add(loc)
+                                }
+                            }
+                        })
+                    }
+                }
+                val horizontalBottomEdges = buildList{
+                    for(y in yRange){
+                        add(buildList {
+                            for (x in xRange){
+                                val loc = VecNew3(x,y)
+                                if (loc !in coordinates && loc.up() in coordinates){
+                                    add(loc)
+                                }
+                            }
+                        })
+                    }
+                }
+                val verticalLeftEdges = buildList{
+                    for(x in xRange){
+                        add(buildList {
+                            for (y in yRange){
+                                val loc = VecNew3(x,y)
+                                if (loc !in coordinates && loc.right() in coordinates){
+                                    add(loc)
+                                }
+                            }
+                        })
+                    }
+                }
+                val verticalRightEdges = buildList{
+                    for(x in xRange){
+                        add(buildList {
+                            for (y in yRange){
+                                val loc = VecNew3(x,y)
+                                if (loc !in coordinates && loc.left() in coordinates){
+                                    add(loc)
+                                }
+                            }
+                        })
+                    }
+                }
+                val horizontalTopSegment = horizontalTopEdges.sumOf { countContiguousGroups(it) }
+                val horizontalBottomSegment = horizontalBottomEdges.sumOf { countContiguousGroups(it) }
+                val verticalLeftSegment = verticalLeftEdges.sumOf { countContiguousGroups(it) }
+                val verticalRightSegment = verticalRightEdges.sumOf { countContiguousGroups(it) }
+                return horizontalTopSegment + horizontalBottomSegment + verticalLeftSegment + verticalRightSegment
+            }
+    }
+
+    fun countContiguousGroups(list : List<VecNew3>): Int{
+        if (list.isEmpty()) return  0
+        val allGroups = mutableListOf<List<VecNew3>>()
+        var currGroups = mutableListOf<VecNew3>()
+        for (elem in list){
+            if (currGroups.isEmpty() || currGroups.last().dist(elem) <= 1){
+                currGroups += elem
+            }else{
+                allGroups.add(currGroups)
+                currGroups = mutableListOf<VecNew3>()
+                currGroups.add(elem)
+            }
+        }
+        if (currGroups.isNotEmpty()){
+            allGroups.add(currGroups)
+        }
+        return allGroups.size
     }
 
     fun getAllCoordinates(lines: List<String>): List<VecNew3> = buildList {
