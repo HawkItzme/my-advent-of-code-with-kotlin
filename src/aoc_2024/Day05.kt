@@ -1,3 +1,5 @@
+package aoc_2024
+
 import kotlin.time.measureTimedValue
 
 data class OrderingRule(val before: Int, val after: Int)

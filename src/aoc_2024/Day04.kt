@@ -1,3 +1,5 @@
+package aoc_2024
+
 fun main(){
     val input = readInput("Day04")
     val grid = Grid(input.map { it.toCharArray().toList() })

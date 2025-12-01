@@ -1,4 +1,4 @@
-import kotlin.math.abs
+package aoc_2024
 
 fun main(){
     val lines = readInput("Day01")

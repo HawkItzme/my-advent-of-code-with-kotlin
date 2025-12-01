@@ -1,3 +1,5 @@
+package aoc_2024
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking

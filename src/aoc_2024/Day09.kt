@@ -1,3 +1,5 @@
+package aoc_2024
+
 fun main() {
     val input = readInput("Day09")
     val line = input.first()

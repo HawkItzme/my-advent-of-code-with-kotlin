@@ -1,3 +1,5 @@
+package aoc_2024
+
 import kotlin.time.measureTimedValue
 
 fun main(){
