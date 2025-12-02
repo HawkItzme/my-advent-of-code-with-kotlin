@@ -3,11 +3,12 @@ package aoc_2024
 import java.math.BigInteger
 import java.security.MessageDigest
 import kotlin.io.path.readText
+import kotlin.io.path.Path
 
 /**
  * Reads lines from the given input txt file.
  */
-fun readInput(name: String) = Path("src/input/$name.txt").readText().trim().lines()
+fun readInput(name: String) = Path("src/aoc_2024/input/$name.txt").readText().trim().lines()
 
 /**
  * Converts string to aoc_2024.md5 hash.

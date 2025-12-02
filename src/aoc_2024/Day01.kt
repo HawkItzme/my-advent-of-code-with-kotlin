@@ -1,5 +1,7 @@
 package aoc_2024
 
+import kotlin.math.abs
+
 fun main(){
     val lines = readInput("Day01")
     val (left, right) = lines.map { line ->
