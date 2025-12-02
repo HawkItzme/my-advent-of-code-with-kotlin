@@ -1,8 +1,8 @@
 package aoc_2025
 
 fun main(){
-    println(part1(readInput("Day01")))
-    println(part2(readInput("Day01")))
+    println(part1(readInputAsListOfString("Day01")))
+    println(part2(readInputAsListOfString("Day01")))
 
 }
 
